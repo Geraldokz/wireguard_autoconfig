@@ -22,7 +22,6 @@ def parse_clients_file(file_path: str) -> List[RawClientInfo]:
     _validate_file(file_path)
     clients_info = _parse_yaml_file(file_path)
     clients = _get_clients_info(clients_info)
-    print(clients)
     return clients
 
 

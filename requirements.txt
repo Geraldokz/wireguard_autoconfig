@@ -1,2 +1,5 @@
+cffi==1.15.0
+cryptography==37.0.2
+pycparser==2.21
 python-dotenv==0.20.0
 PyYAML==6.0
