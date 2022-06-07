@@ -1,15 +1,11 @@
 import base64
-from typing import List, NamedTuple
+from typing import List
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
 
 from .parse_clients_file import RawClientInfo
-
-
-class WireGuardKeys(NamedTuple):
-    private_key: str
-    public_key: str
+from schemas import WireGuardKeys
 
 
 def generate_clients_keys(clients_info: List[RawClientInfo]) -> List[WireGuardKeys]:

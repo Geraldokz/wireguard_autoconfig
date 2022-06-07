@@ -1,20 +1,10 @@
 from os.path import exists
-from typing import NamedTuple, Literal, List
+from typing import List
 
 import yaml
 
 from exceptions import ParsingException
-
-
-class RawDeviceInfo(NamedTuple):
-    name: str
-    type: Literal['smartphone', 'pc']
-
-
-class RawClientInfo(NamedTuple):
-    name: str
-    email: str
-    devices: List[RawDeviceInfo]
+from schemas import RawClientInfo, RawDeviceInfo
 
 
 def parse_clients_file(file_path: str) -> List[RawClientInfo]:

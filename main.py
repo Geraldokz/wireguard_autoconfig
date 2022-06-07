@@ -1,6 +1,7 @@
 import argparse
 
-from script_methods import create_wireguard_config, update_wireguard_config, WireguardDefaultSetting
+from schemas import WireguardDefaultSettings
+from script_methods import create_wireguard_config, update_wireguard_config
 
 
 script_parser = argparse.ArgumentParser()
@@ -13,10 +14,10 @@ script_args = script_parser.parse_args()
 
 
 if __name__ == '__main__':
-    wireguard_settings = WireguardDefaultSetting(
-        project_name=script_args.project,
+    wireguard_settings = WireguardDefaultSettings(
+        name=script_args.project,
         public_ip=script_args.address,
-        default_interface=script_args.interface,
+        interface=script_args.interface,
         clients_file_path=script_args.file
     )
 

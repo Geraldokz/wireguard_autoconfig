@@ -1,48 +1,29 @@
-from typing import NamedTuple, List, Literal
+from typing import List
 
 from config import WIREGUARD_NETWORK, WIREGUARD_PORT
-from .generate_keys import WireGuardKeys
-from .parse_clients_file import RawClientInfo, RawDeviceInfo
+from schemas import (
+    RawClientInfo,
+    RawDeviceInfo,
+    FullClientInfo,
+    FullDeviceInfo,
+    WireGuardKeys,
+    WireguardDefaultSettings,
+    VPNServiceInfo
+)
 
 
-class DeviceInfo(NamedTuple):
-    name: str
-    vpn_ip: str
-    private_key: str
-    public_key: str
-    type: Literal['smartphone', 'pc']
-
-
-class ClientInfo(NamedTuple):
-    name: str
-    email: str
-    devices: List[DeviceInfo]
-
-
-class VPNServer(NamedTuple):
-    name: str
-    network: str
-    port: int
-    vpn_ip: str
-    public_ip: str
-    interface: str
-    private_key: str
-    public_key: str
-    clients: List[ClientInfo]
-
-
-def create_vpn_service_conf(wireguard_default, clients_info: List[RawClientInfo],
+def create_vpn_service_conf(wireguard_default: WireguardDefaultSettings, clients_info: List[RawClientInfo],
                             devices_keys: List[WireGuardKeys], server_keys: WireGuardKeys,
-                            devices_vpn_ip: List[str], server_vpn_ip: str) -> VPNServer:
+                            devices_vpn_ip: List[str], server_vpn_ip: str) -> VPNServiceInfo:
     """Собирает полную информацию о развертываемом сервисе в структуру VPNServer"""
     clients = _create_full_clients_info(clients_info, devices_keys, devices_vpn_ip)
-    vpn_server = VPNServer(
-        name=wireguard_default.project_name,
+    vpn_server = VPNServiceInfo(
+        name=wireguard_default.name,
         network=WIREGUARD_NETWORK,
         port=WIREGUARD_PORT,
         vpn_ip=server_vpn_ip,
         public_ip=wireguard_default.public_ip,
-        interface=wireguard_default.default_interface,
+        interface=wireguard_default.interface,
         private_key=server_keys.private_key,
         public_key=server_keys.public_key,
         clients=clients
@@ -51,12 +32,12 @@ def create_vpn_service_conf(wireguard_default, clients_info: List[RawClientInfo]
 
 
 def _create_full_clients_info(clients_info: List[RawClientInfo],
-                              devices_keys: List[WireGuardKeys], devices_vpn_ip: List[str]) -> List[ClientInfo]:
+                              devices_keys: List[WireGuardKeys], devices_vpn_ip: List[str]) -> List[FullClientInfo]:
     """Собирает полную информацию о клиентах в структуру ClientInfo и возвращает их список"""
     full_clients_info = []
     for raw_client in clients_info:
         devices = _create_full_devices_info(raw_client.devices, devices_keys, devices_vpn_ip)
-        client = ClientInfo(
+        client = FullClientInfo(
             name=raw_client.name,
             email=raw_client.email,
             devices=devices
@@ -66,7 +47,7 @@ def _create_full_clients_info(clients_info: List[RawClientInfo],
 
 
 def _create_full_devices_info(devices_info: List[RawDeviceInfo], devices_keys: List[WireGuardKeys],
-                              devices_vpn_ip: List[str]) -> List[DeviceInfo]:
+                              devices_vpn_ip: List[str]) -> List[FullDeviceInfo]:
     """Собирает полную информацию об устройствах в структуру DeviceInfo и возвращает их список"""
     devices = []
     for raw_device in devices_info:
@@ -74,7 +55,7 @@ def _create_full_devices_info(devices_info: List[RawDeviceInfo], devices_keys: L
         wireguard_keys = _cut_keys_from_list(devices_keys)
         private_key = wireguard_keys.private_key
         public_key = wireguard_keys.public_key
-        device_info = DeviceInfo(
+        device_info = FullDeviceInfo(
             name=raw_device.name,
             vpn_ip=vpn_ip,
             private_key=private_key,
@@ -97,5 +78,3 @@ def _cut_keys_from_list(devices_keys: List[WireGuardKeys]) -> WireGuardKeys:
     wireguard_keys = devices_keys[0]
     devices_keys.pop(0)
     return wireguard_keys
-
-
