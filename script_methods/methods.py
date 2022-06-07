@@ -6,7 +6,8 @@ from services import (
     generate_clients_keys,
     generate_server_keys,
     create_clients_addresses,
-    create_sever_address
+    create_sever_address,
+    create_vpn_service_conf
 )
 
 
@@ -25,7 +26,8 @@ def create_wireguard_config(wireguard_settings: WireguardDefaultSetting) -> None
     server_wireguard_keys = generate_server_keys()
     devices_vpn_ip = create_clients_addresses(clients_info)
     server_vpn_ip = create_sever_address()
-
+    vpn_server = create_vpn_service_conf(wireguard_settings, clients_info, devices_wireguard_keys,
+                                         server_wireguard_keys, devices_vpn_ip, server_vpn_ip)
 
 
 def update_wireguard_config(wireguard_setting: WireguardDefaultSetting) -> None:

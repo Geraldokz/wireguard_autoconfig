@@ -1,12 +1,12 @@
 from ipaddress import IPv4Network
 from typing import List
 
-from config import WIREGUARD_SUBNET
+from config import WIREGUARD_NETWORK
 from exceptions import IPAddressGeneratorException
 
 from .parse_clients_file import RawClientInfo
 
-vpn_network = IPv4Network(WIREGUARD_SUBNET)
+vpn_network = IPv4Network(WIREGUARD_NETWORK)
 
 
 def create_clients_addresses(clients_info: List[RawClientInfo]) -> List[str]:
@@ -31,8 +31,3 @@ def _count_devices(clients_info: List[RawClientInfo]) -> int:
         for device in client.devices:
             devices_count += 1
     return devices_count
-
-
-if __name__ == '__main__':
-    for ip in list(vpn_network)[::500]:
-        print(ip)
