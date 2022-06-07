@@ -1,5 +1,7 @@
 from typing import NamedTuple
 
+from services import parse_clients_file
+
 
 class WireguardDefaultSetting(NamedTuple):
     project_name: str
@@ -10,7 +12,7 @@ class WireguardDefaultSetting(NamedTuple):
 
 def create_wireguard_config(wireguard_settings: WireguardDefaultSetting) -> None:
     """Запускает процесс создания конфигурации wireguard с нуля"""
-    pass
+    parse_clients_file(wireguard_settings.clients_file_path)
 
 
 def update_wireguard_config(wireguard_setting: WireguardDefaultSetting) -> None:

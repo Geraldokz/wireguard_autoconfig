@@ -139,3 +139,4 @@ dmypy.json
 /accidents
 
 .wireguard
+clients.yaml
