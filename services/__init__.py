@@ -4,4 +4,6 @@ from .generate_keys import generate_clients_keys, generate_server_keys
 from .generate_ip import create_clients_addresses, create_sever_address
 from .create_vpn_service_conf import create_vpn_service_conf
 from .create_wg_configs import create_wg_configs
+from .save_json_config import save_vpn_service_config_as_json
+
 

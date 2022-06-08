@@ -8,7 +8,8 @@ from services import (
     create_clients_addresses,
     create_sever_address,
     create_vpn_service_conf,
-    create_wg_configs
+    create_wg_configs,
+    save_vpn_service_config_as_json
 )
 
 
@@ -23,6 +24,7 @@ def create_wireguard_config(wireguard_settings: WireguardDefaultSettings) -> Non
     vpn_service = create_vpn_service_conf(wireguard_settings, clients_info, devices_wireguard_keys,
                                           server_wireguard_keys, devices_vpn_ip, server_vpn_ip)
     create_wg_configs(vpn_service)
+    save_vpn_service_config_as_json(vpn_service, f'{WORK_DIR}/{wireguard_settings.name}')
 
 
 def update_wireguard_config(wireguard_setting: WireguardDefaultSettings) -> None:
