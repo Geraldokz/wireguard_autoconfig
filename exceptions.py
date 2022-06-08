@@ -4,3 +4,7 @@ class ParsingException(Exception):
 
 class IPAddressGeneratorException(Exception):
     pass
+
+
+class ConfigCreatorException(Exception):
+    pass

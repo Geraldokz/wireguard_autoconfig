@@ -1,7 +1,9 @@
 cffi==1.15.0
 cryptography==37.0.2
+Pillow==9.1.1
 pycparser==2.21
 pydantic==1.9.1
 python-dotenv==0.20.0
 PyYAML==6.0
+qrcode==7.3.1
 typing-extensions==4.2.0
