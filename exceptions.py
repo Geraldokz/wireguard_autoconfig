@@ -8,3 +8,7 @@ class IPAddressGeneratorException(Exception):
 
 class ConfigCreatorException(Exception):
     pass
+
+
+class EmailSenderException(Exception):
+    pass

@@ -5,5 +5,7 @@ from .schemas import (
     FullClientInfo,
     FullDeviceInfo,
     VPNServiceInfo,
-    WireGuardKeys
+    WireGuardKeys,
+    MailingInfo,
+    AccessEmailMessage
 )

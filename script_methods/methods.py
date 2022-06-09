@@ -1,5 +1,5 @@
 from config import WORK_DIR
-from schemas import WireguardDefaultSettings
+from schemas import WireguardDefaultSettings, MailingInfo
 from services import (
     parse_clients_file,
     create_folder,
@@ -11,6 +11,7 @@ from services import (
     create_wg_configs,
     save_vpn_service_config_as_json
 )
+from services.email_sender import send_emails, create_emails_messages
 
 
 def create_wireguard_config(wireguard_settings: WireguardDefaultSettings) -> None:
@@ -25,8 +26,15 @@ def create_wireguard_config(wireguard_settings: WireguardDefaultSettings) -> Non
                                           server_wireguard_keys, devices_vpn_ip, server_vpn_ip)
     create_wg_configs(vpn_service)
     save_vpn_service_config_as_json(vpn_service, f'{WORK_DIR}/{wireguard_settings.name}')
+    print(f'VPN service {wireguard_settings.name} create successfully!')
 
 
 def update_wireguard_config(wireguard_setting: WireguardDefaultSettings) -> None:
     """Запускает процесс обновления конфигурации wireguard"""
     pass
+
+
+def send_access_emails(mailing_info: MailingInfo) -> None:
+    """Запускает процесс рассылки qr кодов и конфигов клиентам"""
+    access_emails = create_emails_messages(mailing_info)
+    send_emails(access_emails)

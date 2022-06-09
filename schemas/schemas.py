@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel
 
@@ -46,3 +46,18 @@ class VPNServiceInfo(BaseModel):
 class WireGuardKeys(BaseModel):
     private_key: str
     public_key: str
+
+
+class MailingInfo(BaseModel):
+    vpn_project: str
+    vpn_client: Optional[str]
+    instruction_path: str
+    subject: str
+    mail_text: str
+
+
+class AccessEmailMessage(BaseModel):
+    email_to: str
+    subject: str
+    body: str
+    attachments: List[str]

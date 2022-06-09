@@ -1,1 +1,1 @@
-from .methods import create_wireguard_config, update_wireguard_config
+from .methods import create_wireguard_config, update_wireguard_config, send_access_emails
