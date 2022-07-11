@@ -1,0 +1,13 @@
+.auth-page {
+    height: 100vh;
+}
+
+.auth-attention {
+    color: red;
+}
+
+.auth-block {
+    max-width: 550px;
+    margin: auto;
+    padding: 120px 0;
+}
