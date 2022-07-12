@@ -1,5 +1,9 @@
-.auth-page {
+body {
     height: 100vh;
+}
+
+.wrapper {
+    padding: 20px 0;
 }
 
 .auth-attention {

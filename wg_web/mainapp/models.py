@@ -17,7 +17,7 @@ class VPNService(models.Model):
     vpn_network = models.CharField(max_length=18, verbose_name='VPN Service network')
     vpn_port = models.IntegerField(verbose_name='VPN port')
     private_ip = models.CharField(max_length=15, verbose_name='VPN Service ip')
-    vpn_if_name = models.CharField(max_length=50, verbose_name='VPN Service interface name', default='eth0')
+    vpn_if_name = models.CharField(max_length=50, verbose_name='VPN Service interface name', default='wg0')
     public_key = models.CharField(max_length=44, verbose_name='VPN Service pubkey')
     private_key = models.CharField(max_length=44, verbose_name='VPN Service privkey')
     server = models.ForeignKey(VPNServer, on_delete=models.CASCADE, verbose_name='VPN server')
