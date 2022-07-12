@@ -1,0 +1,2 @@
+class ServerDeleteException(Exception):
+    pass

@@ -10,12 +10,12 @@
             <h1 class="mb-3">VPN Servers</h1>
             {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-primary" role="alert">
+            <div class="alert {{ message.tags }}" role="alert">
                 {{ message }}
               </div>
             {% endfor %}
             {% endif %}
-            <a href="{% url 'mainapp:vpn_servers_create' %}" class="btn btn-outline-success mb-3">Add new server</a>
+            <a href="{% url 'mainapp:create_vpn_server' %}" class="btn btn-outline-success mb-3">Add new server</a>
             <div class="accordion" id="accordionExample">
                 {% for server in servers %}
                 <div class="card mb-2">
@@ -57,7 +57,10 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
-                                        <a href="#" class="btn btn-danger">Delete</a>
+                                        <form action="{% url 'mainapp:delete_vpn_server' server.pk %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
