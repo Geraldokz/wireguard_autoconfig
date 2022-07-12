@@ -4,7 +4,6 @@ from mainapp.exceptions import ServerDeleteException
 from mainapp.models import VPNServer
 
 
-
 def delete_vpn_server(server_id: int) -> None:
     """Delete VPN server object by id"""
     vpn_server = _get_vpn_server(server_id)

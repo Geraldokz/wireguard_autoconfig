@@ -38,6 +38,7 @@
                                 <strong>Interface: </strong>{{ server.if_name }}
                             </div>
                         </div>
+                        <a href="{% url 'mainapp:update_vpn_server' server.pk %}" class="btn btn-outline-primary">Update server</a>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                             data-bs-target="#Modal{{ forloop.counter }}">Delete server</button>
                         <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
