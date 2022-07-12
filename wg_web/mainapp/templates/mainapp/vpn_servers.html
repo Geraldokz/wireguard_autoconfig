@@ -1,6 +1,6 @@
 {% extends 'mainapp/template.html' %}
 {% load static %}
-{% block title %}Login{% endblock %}
+{% block title %}Servers{% endblock %}
 
 {% block content %}
 {% include 'mainapp/header.html' %}
@@ -8,7 +8,14 @@
     <div class="wrapper">
         <div class="container-fluid">
             <h1 class="mb-3">VPN Servers</h1>
-            <a href="#" class="btn btn-outline-success mb-3">Add new server</a>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-primary" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+            {% endif %}
+            <a href="{% url 'mainapp:vpn_servers_create' %}" class="btn btn-outline-success mb-3">Add new server</a>
             <div class="accordion" id="accordionExample">
                 {% for server in servers %}
                 <div class="card mb-2">
@@ -43,8 +50,9 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Are you sure you want to delete <span class="text-primary">{{ server.hostname }}</span> server? All VPN services, clients and devices on this server
-                                        <strong>will be removed!</strong>
+                                        Are you sure you want to delete
+                                        <span class="text-primary">{{ server.hostname }}</span> server? All VPN
+                                        services, clients and devices on this server <strong>will be removed!</strong>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
