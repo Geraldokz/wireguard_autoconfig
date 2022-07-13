@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, FormView
 
-from .exceptions import ServerDeleteException
+from .exceptions import ModelDeleteException
 from .forms import VPNServerForm, VPNServiceForm
-from .services.servers import delete_vpn_server
+from .services.models.crud import delete_model_object
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
 
 
@@ -84,8 +84,20 @@ def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""
     if request.method == 'POST':
         try:
-            delete_vpn_server(pk)
+            delete_model_object(pk, VPNServer)
             messages.success(request, 'Server deleted successfully!')
-        except ServerDeleteException:
+        except ModelDeleteException:
             messages.error(request, f'Server with id {pk} does not exist!')
         return redirect('mainapp:vpn_servers_page')
+
+
+@login_required(login_url='/login/')
+def delete_vpn_service_view(request, pk: int) -> None:
+    """Delete service view"""
+    if request.method == 'POST':
+        try:
+            delete_model_object(pk, VPNService)
+            messages.success(request, 'VPN Service deleted successfully!')
+        except ModelDeleteException:
+            messages.error(request, f'VPN Service with id {pk} does not exist!')
+        return redirect('mainapp:vpn_services_page')

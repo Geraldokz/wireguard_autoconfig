@@ -80,7 +80,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                            <form action="#" method="post">
+                                            <form action="{% url 'mainapp:delete_vpn_service' service.pk %}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>

@@ -1,2 +1,2 @@
-class ServerDeleteException(Exception):
+class ModelDeleteException(Exception):
     pass
