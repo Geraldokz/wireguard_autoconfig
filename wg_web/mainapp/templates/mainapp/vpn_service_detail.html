@@ -7,6 +7,13 @@
 <section class="services-page">
     <div class="wrapper">
         <div class="container-fluid">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'mainapp:main_page' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'mainapp:vpn_services_page' %}">VPN Services</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ service.service_name }}</li>
+                </ol>
+            </nav>
             <h1 class="mb-3">{{ service.service_name }} details</h1>
             {% if messages %}
             {% for message in messages %}

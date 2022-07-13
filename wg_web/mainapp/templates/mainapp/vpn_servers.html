@@ -7,67 +7,74 @@
 <section class="servers-page">
     <div class="wrapper">
         <div class="container-fluid">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'mainapp:main_page' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">VPN Servers</li>
+                </ol>
+            </nav>
             <h1 class="mb-3">VPN Servers</h1>
             {% if messages %}
             {% for message in messages %}
             <div class="alert {{ message.tags }}" role="alert">
                 {{ message }}
-              </div>
+            </div>
             {% endfor %}
             {% endif %}
             <a href="{% url 'mainapp:create_vpn_server' %}" class="btn btn-outline-success mb-3">Add new server</a>
-                {% for server in servers %}
-                <div class="card mb-2">
-                    <div class="card-header">
-                        {{ server.hostname }}
+            {% for server in servers %}
+            <div class="card mb-2">
+                <div class="card-header">
+                    {{ server.hostname }}
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <strong>Hostname: </strong>{{ server.hostname }}
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col">
-                                <strong>Hostname: </strong>{{ server.hostname }}
-                            </div>
+                    <div class="row mb-2">
+                        <div class="col">
+                            <strong>IP: </strong>{{ server.public_ip }}
                         </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <strong>IP: </strong>{{ server.public_ip }}
-                            </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong>Interface: </strong>{{ server.if_name }}
                         </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <strong>Interface: </strong>{{ server.if_name }}
-                            </div>
-                        </div>
-                        <a href="{% url 'mainapp:update_vpn_server' server.pk %}" class="btn btn-outline-primary">Update server</a>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                            data-bs-target="#Modal{{ forloop.counter }}">Delete server</button>
-                        <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
-                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete
-                                        <span class="text-primary">{{ server.hostname }}</span> server? All VPN
-                                        services, clients and devices on this server <strong>will be removed!</strong>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancel</button>
-                                        <form action="{% url 'mainapp:delete_vpn_server' server.pk %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                    </div>
+                    </div>
+                    <a href="{% url 'mainapp:update_vpn_server' server.pk %}" class="btn btn-outline-primary">Update
+                        server</a>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#Modal{{ forloop.counter }}">Delete server</button>
+                    <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete
+                                    <span class="text-primary">{{ server.hostname }}</span> server? All VPN
+                                    services, clients and devices on this server <strong>will be removed!</strong>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <form action="{% url 'mainapp:delete_vpn_server' server.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
