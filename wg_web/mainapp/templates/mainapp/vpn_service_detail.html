@@ -7,7 +7,7 @@
 <section class="services-page">
     <div class="wrapper">
         <div class="container-fluid">
-            <h1 class="mb-3">VPN Services</h1>
+            <h1 class="mb-3">{{ service.service_name }} details</h1>
             {% if messages %}
             {% for message in messages %}
             <div class="alert {{ message.tags }}" role="alert">
@@ -15,15 +15,45 @@
             </div>
             {% endfor %}
             {% endif %}
-            <a href="{% url 'mainapp:create_vpn_service' %}" class="btn btn-outline-success mb-3">Add new service</a>
+            <a href="#" class="btn btn-outline-success mb-3">Import service config</a>
+            <h2 class="mb-3">Service info</h2>
+            <table class="table table-sm table-light table-bordered mb-4">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Network</th>
+                        <th scope="col">Port</th>
+                        <th scope="col">IP</th>
+                        <th scope="col">Interface</th>
+                        <th scope="col">Public key</th>
+                        <th scope="col">Private key</th>
+                        <th scope="col">Server name</th>
+                        <th scope="col">Server ip</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ service.service_name }}</td>
+                        <td>{{ service.vpn_network }}</td>
+                        <td>{{ service.vpn_port }}</td>
+                        <td>{{ service.private_ip }}</td>
+                        <td>{{ service.vpn_if_name }}</td>
+                        <td>{{ service.public_key }}</td>
+                        <td>{{ service.private_key }}</td>
+                        <td>{{ service.server.hostname }}</td>
+                        <td>{{ service.server.public_ip }}</td>
+                </tbody>
+            </table>
+            <h2 class="mb-3">Clients list</h2>
+            <a href="#" class="btn btn-outline-success mb-3">Add new client</a>
             <div class="accordion" id="accordionFlushExample">
-                {% for service in services %}
+                {% for client in clients %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false"
                             aria-controls="flush-collapseOne">
-                            {{ service.service_name }}
+                            {{ client.client_name }}
                         </button>
                     </h2>
                     <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse"
@@ -31,38 +61,23 @@
                         <div class="accordion-body">
                             <div class="row mb-2">
                                 <div class="col">
-                                    <strong>Service name: </strong>{{ service.service_name }}
+                                    <strong>Client name: </strong>{{ client.client_name }}
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col">
-                                    <strong>Server hostname: </strong>{{ service.server.hostname }}
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <strong>Server IP: </strong>{{ service.server.public_ip }}
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <strong>VPN network: </strong>{{ service.vpn_network }}
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <strong>VPN port: </strong>{{ service.vpn_port }}
+                                    <strong>Client email: </strong>{{ client.client_email }}
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    <strong>VPN interface name: </strong>{{ service.vpn_if_name }}
+                                    <strong>VPN service: </strong>{{ client.vpn_service.service_name }}
                                 </div>
                             </div>
-                            <a href="{% url 'mainapp:vpn_service_details_page' service.pk %}" class="btn btn-outline-secondary">Details</a>
-                            <a href="{% url 'mainapp:update_vpn_service' service.pk %}" class="btn btn-outline-primary">Update service</a>
+                            <a href="" class="btn btn-outline-secondary">Details</a>
+                            <a href="" class="btn btn-outline-primary">Update client</a>
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                                data-bs-target="#Modal{{ forloop.counter }}">Delete service</button>
+                                data-bs-target="#Modal{{ forloop.counter }}">Delete client</button>
                             <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -74,13 +89,13 @@
                                         </div>
                                         <div class="modal-body">
                                             Are you sure you want to delete
-                                            <span class="text-primary">{{ service.service_name }}</span> VPN service? All VPN
-                                            clients and devices on this service <strong>will be removed!</strong>
+                                            <span class="text-primary">{{ client.client_name }}</span> client? All
+                                            clients devices <strong>will be removed!</strong>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                            <form action="{% url 'mainapp:delete_vpn_service' service.pk %}" method="post">
+                                            <form action="" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>

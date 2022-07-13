@@ -95,6 +95,18 @@ class VPNServiceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 
+class VPNServiceDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
+    model = VPNService
+    context_object_name = 'service'
+    template_name = 'mainapp/vpn_service_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clients'] = VPNClient.objects.filter(vpn_service=self.object)
+        return context
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""

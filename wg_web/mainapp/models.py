@@ -1,5 +1,6 @@
 from django.core.validators import validate_ipv4_address, validate_email
 from django.db import models
+from django.shortcuts import reverse
 
 from mainapp.services.wg_keys import generate_keys
 from mainapp.services.vpn_services.validators import validate_network
@@ -15,6 +16,9 @@ class VPNServer(models.Model):
         return f'{self.hostname}'
 
 
+# TO DO
+# 1. Replace keys generating logic to save method
+# 2. Make auto generate private ip field with first address in vpn_network
 class VPNService(models.Model):
     """VPN Service model"""
     PRIVATE_KEY, PUBLIC_KEY = generate_keys()
@@ -31,6 +35,11 @@ class VPNService(models.Model):
     def __str__(self):
         return f'{self.service_name}'
 
+    def get_absolute_url(self):
+        return reverse('mainapp:vpn_service_details_page', kwargs={
+            'pk': self.pk
+        })
+
 
 class VPNClient(models.Model):
     """VPN Client model"""
@@ -42,6 +51,8 @@ class VPNClient(models.Model):
         return f'{self.client_name}'
 
 
+# TO DO
+# 1. Replace keys generating logic to save method
 class VPNDevice(models.Model):
     """VPN Device model"""
     PRIVATE_KEY, PUBLIC_KEY = generate_keys()
