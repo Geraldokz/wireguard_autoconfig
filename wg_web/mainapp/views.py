@@ -57,6 +57,13 @@ class VPNServerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 
+class VPNServiceListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    model = VPNService
+    template_name = 'mainapp/vpn_services.html'
+    context_object_name = 'services'
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""

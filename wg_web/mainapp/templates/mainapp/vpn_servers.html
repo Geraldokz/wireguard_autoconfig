@@ -16,7 +16,6 @@
             {% endfor %}
             {% endif %}
             <a href="{% url 'mainapp:create_vpn_server' %}" class="btn btn-outline-success mb-3">Add new server</a>
-            <div class="accordion" id="accordionExample">
                 {% for server in servers %}
                 <div class="card mb-2">
                     <div class="card-header">
@@ -69,7 +68,6 @@
                     </div>
                 </div>
                 {% endfor %}
-            </div>
         </div>
     </div>
 </section>
