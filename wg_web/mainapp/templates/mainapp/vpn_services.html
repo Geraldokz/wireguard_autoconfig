@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <a href="#" class="btn btn-outline-secondary">Details</a>
-                            <a href="#" class="btn btn-outline-primary">Update service</a>
+                            <a href="{% url 'mainapp:update_vpn_service' service.pk %}" class="btn btn-outline-primary">Update service</a>
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#Modal{{ forloop.counter }}">Delete service</button>
                             <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"

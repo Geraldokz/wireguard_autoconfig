@@ -79,6 +79,22 @@ class VPNServiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
 
+class VPNServiceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = '/login/'
+    model = VPNService
+    form_class = VPNServiceForm
+    template_name = 'mainapp/form.html'
+    success_url = '/vpn_services'
+    success_message = 'VPN Service updated successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Update VPN Service'
+        context['submit_button_text'] = 'Update service'
+        context['cancel_button_url'] = self.success_url
+        return context
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""
