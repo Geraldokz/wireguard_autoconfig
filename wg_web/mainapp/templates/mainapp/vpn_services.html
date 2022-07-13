@@ -15,7 +15,7 @@
             </div>
             {% endfor %}
             {% endif %}
-            <a href="" class="btn btn-outline-success mb-3">Add new service</a>
+            <a href="{% url 'mainapp:create_vpn_service' %}" class="btn btn-outline-success mb-3">Add new service</a>
             <div class="accordion" id="accordionFlushExample">
                 {% for service in services %}
                 <div class="accordion-item">

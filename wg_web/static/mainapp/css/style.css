@@ -16,3 +16,11 @@ body {
     margin: auto;
     padding: 120px 0;
 }
+
+.errorlist {
+    list-style: none !important;
+    color: red !important;
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}

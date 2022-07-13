@@ -1,10 +1,14 @@
+from django.core.validators import validate_ipv4_address, validate_email
 from django.db import models
+
+from mainapp.services.wg_keys import generate_keys
+from mainapp.services.vpn_services.validators import validate_network
 
 
 class VPNServer(models.Model):
     """VPN Server model"""
     hostname = models.CharField(max_length=255, verbose_name='Hostname')
-    public_ip = models.CharField(max_length=15, verbose_name='Server IP')
+    public_ip = models.CharField(max_length=15, verbose_name='Server IP', validators=[validate_ipv4_address])
     if_name = models.CharField(max_length=50, verbose_name='Eth interface name')
 
     def __str__(self):
@@ -13,13 +17,15 @@ class VPNServer(models.Model):
 
 class VPNService(models.Model):
     """VPN Service model"""
+    PRIVATE_KEY, PUBLIC_KEY = generate_keys()
+
     service_name = models.CharField(max_length=255, verbose_name='VPN Service name')
-    vpn_network = models.CharField(max_length=18, verbose_name='VPN Service network')
+    vpn_network = models.CharField(max_length=18, verbose_name='VPN Service network', validators=[validate_network])
     vpn_port = models.IntegerField(verbose_name='VPN port')
-    private_ip = models.CharField(max_length=15, verbose_name='VPN Service ip')
+    private_ip = models.CharField(max_length=15, verbose_name='VPN Service ip', validators=[validate_ipv4_address])
     vpn_if_name = models.CharField(max_length=50, verbose_name='VPN Service interface name', default='wg0')
-    public_key = models.CharField(max_length=44, verbose_name='VPN Service pubkey')
-    private_key = models.CharField(max_length=44, verbose_name='VPN Service privkey')
+    public_key = models.CharField(max_length=44, verbose_name='VPN Service pubkey', default=PRIVATE_KEY)
+    private_key = models.CharField(max_length=44, verbose_name='VPN Service privkey', default=PUBLIC_KEY)
     server = models.ForeignKey(VPNServer, on_delete=models.CASCADE, verbose_name='VPN server')
 
     def __str__(self):
@@ -29,7 +35,7 @@ class VPNService(models.Model):
 class VPNClient(models.Model):
     """VPN Client model"""
     client_name = models.CharField(max_length=255, verbose_name='VPN Client name')
-    client_email = models.CharField(max_length=255, verbose_name='VPN Client email')
+    client_email = models.CharField(max_length=255, verbose_name='VPN Client email', validators=[validate_email])
     vpn_service = models.ForeignKey(VPNService, on_delete=models.CASCADE, verbose_name='VPN Service')
 
     def __str__(self):
@@ -38,6 +44,7 @@ class VPNClient(models.Model):
 
 class VPNDevice(models.Model):
     """VPN Device model"""
+    PRIVATE_KEY, PUBLIC_KEY = generate_keys()
     DEVICE_TYPES = (
         ('pc', 'PC'),
         ('sm', 'Smartphone')
@@ -45,9 +52,9 @@ class VPNDevice(models.Model):
 
     device_name = models.CharField(max_length=255, verbose_name='VPN Device name')
     device_type = models.CharField(max_length=10, choices=DEVICE_TYPES, verbose_name='VPN Device type')
-    private_ip = models.CharField(max_length=15, verbose_name='VPN Device ip')
-    public_key = models.CharField(max_length=44, verbose_name='VPN Device pubkey')
-    private_key = models.CharField(max_length=44, verbose_name='VPN Device privkey')
+    private_ip = models.CharField(max_length=15, verbose_name='VPN Device ip', validators=[validate_ipv4_address])
+    public_key = models.CharField(max_length=44, verbose_name='VPN Device pubkey', default=PUBLIC_KEY)
+    private_key = models.CharField(max_length=44, verbose_name='VPN Device privkey', default=PRIVATE_KEY)
     client = models.ForeignKey(VPNClient, on_delete=models.CASCADE, verbose_name='VPN Client')
 
     def __str__(self):

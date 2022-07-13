@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin, messages
 from django.shortcuts import render, redirect
 
-from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
+from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, FormView
 
 from .exceptions import ServerDeleteException
-from .forms import VPNServerForm
+from .forms import VPNServerForm, VPNServiceForm
 from .services.servers import delete_vpn_server
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
 
@@ -62,6 +62,21 @@ class VPNServiceListView(LoginRequiredMixin, ListView):
     model = VPNService
     template_name = 'mainapp/vpn_services.html'
     context_object_name = 'services'
+
+
+class VPNServiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url = '/login/'
+    form_class = VPNServiceForm
+    template_name = 'mainapp/form.html'
+    success_url = '/vpn_services'
+    success_message = 'VPN Service created successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Create VPN Service'
+        context['submit_button_text'] = 'Create service'
+        context['cancel_button_url'] = self.success_url
+        return context
 
 
 @login_required(login_url='/login/')
