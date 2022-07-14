@@ -102,9 +102,24 @@
                                 <strong>Publick key: </strong>{{ device.public_key }}
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <div class="col">
                                 <strong>Private key: </strong>{{ device.private_key }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>DNS IP: </strong>{{ device.dns }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Allowed ips: </strong>{{ device.allowed_ips }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <strong>Persistent keepalive: </strong>{{ device.ka_check }}
                             </div>
                         </div>
                         <a href="" class="btn btn-outline-primary">Update device</a>

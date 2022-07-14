@@ -66,6 +66,9 @@ class VPNDevice(models.Model):
     private_ip = models.CharField(max_length=15, verbose_name='VPN Device ip', validators=[validate_ipv4_address])
     public_key = models.CharField(max_length=44, verbose_name='VPN Device pubkey', default=PUBLIC_KEY)
     private_key = models.CharField(max_length=44, verbose_name='VPN Device privkey', default=PRIVATE_KEY)
+    dns = models.CharField(max_length=15, verbose_name='DNS ip', default='8.8.8.8', validators=[validate_ipv4_address])
+    allowed_ips = models.CharField(max_length=255, verbose_name='Allowed ips', default='0.0.0.0/0')
+    ka_check = models.IntegerField(verbose_name='Keepalive check interval', default=20)
     client = models.ForeignKey(VPNClient, on_delete=models.CASCADE, verbose_name='VPN Client')
 
     def __str__(self):
