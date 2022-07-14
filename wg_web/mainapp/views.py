@@ -80,6 +80,11 @@ class VPNServiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context['cancel_button_url'] = self.success_url
         return context
 
+    def get_initial(self, *args, **kwargs):
+        initial = super(VPNServiceCreateView, self).get_initial()
+        initial['private_key'], initial['public_key'] = generate_keys()
+        return initial
+
 
 class VPNServiceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = '/login/'

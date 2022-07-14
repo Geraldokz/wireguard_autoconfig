@@ -1,3 +1,5 @@
+from ipaddress import IPv4Network
+
 from django.core.validators import validate_ipv4_address, validate_email
 from django.db import models
 from django.shortcuts import reverse
@@ -16,20 +18,16 @@ class VPNServer(models.Model):
         return f'{self.hostname}'
 
 
-# TO DO
-# 1. Replace keys generating logic to save method
-# 2. Make auto generate private ip field with first address in vpn_network
+# TO DO: add keys validation
 class VPNService(models.Model):
     """VPN Service model"""
-    PRIVATE_KEY, PUBLIC_KEY = generate_keys()
-
     service_name = models.CharField(max_length=255, verbose_name='VPN Service name')
     vpn_network = models.CharField(max_length=18, verbose_name='VPN Service network', validators=[validate_network])
     vpn_port = models.IntegerField(verbose_name='VPN port')
     private_ip = models.CharField(max_length=15, verbose_name='VPN Service ip', validators=[validate_ipv4_address])
     vpn_if_name = models.CharField(max_length=50, verbose_name='VPN Service interface name', default='wg0')
-    public_key = models.CharField(max_length=44, verbose_name='VPN Service pubkey', default=PRIVATE_KEY)
-    private_key = models.CharField(max_length=44, verbose_name='VPN Service privkey', default=PUBLIC_KEY)
+    public_key = models.CharField(max_length=44, verbose_name='VPN Service pubkey')
+    private_key = models.CharField(max_length=44, verbose_name='VPN Service privkey')
     server = models.ForeignKey(VPNServer, on_delete=models.CASCADE, verbose_name='VPN server')
 
     def __str__(self):
@@ -39,6 +37,11 @@ class VPNService(models.Model):
         return reverse('mainapp:vpn_service_details_page', kwargs={
             'pk': self.pk
         })
+
+    def save(self, *args, **kwargs):
+        """Take first network ip for vpn service address"""
+        self.private_ip = str(IPv4Network(self.vpn_network)[1])
+        super().save(*args, **kwargs)
 
 
 class VPNClient(models.Model):
