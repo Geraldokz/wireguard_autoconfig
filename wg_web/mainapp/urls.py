@@ -9,6 +9,7 @@ from .views import (
     VPNServiceCreateView,
     VPNServiceUpdateView,
     VPNServiceDetailView,
+    VPNClientCreateView,
     delete_vpn_server_view,
     delete_vpn_service_view
 )
@@ -26,4 +27,5 @@ urlpatterns = [
     path('vpn_services/update/<pk>', VPNServiceUpdateView.as_view(), name='update_vpn_service'),
     path('vpn_services/<pk>', VPNServiceDetailView.as_view(), name='vpn_service_details_page'),
     path('vpn_services/delete/<pk>', delete_vpn_service_view, name='delete_vpn_service'),
+    path('vpn_services/<pk>/create_client', VPNClientCreateView.as_view(), name='create_vpn_client'),
 ]

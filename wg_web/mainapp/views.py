@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, FormView
 
 from .exceptions import ModelDeleteException
-from .forms import VPNServerForm, VPNServiceForm
+from .forms import VPNServerForm, VPNServiceForm, VPNClientForm
 from .services.models.crud import delete_model_object
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
 
@@ -105,6 +105,28 @@ class VPNServiceDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['clients'] = VPNClient.objects.filter(vpn_service=self.object)
         return context
+
+
+class VPNClientCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url = '/login/'
+    form_class = VPNClientForm
+    template_name = 'mainapp/form.html'
+    success_message = 'Client created successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Create VPN Client'
+        context['submit_button_text'] = 'Create client'
+        context['cancel_button_url'] = self.success_url
+        return context
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(VPNClientCreateView, self).get_initial()
+        initial['vpn_service'] = self.kwargs['pk']
+        return initial
+
+    def get_success_url(self):
+        return f'/vpn_services/{self.kwargs["pk"]}'
 
 
 @login_required(login_url='/login/')

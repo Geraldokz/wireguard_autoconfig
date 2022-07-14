@@ -52,7 +52,7 @@
                 </tbody>
             </table>
             <h2 class="mb-3">Clients list</h2>
-            <a href="#" class="btn btn-outline-success mb-3">Add new client</a>
+            <a href="{% url 'mainapp:create_vpn_client' service.pk %}" class="btn btn-outline-success mb-3">Add new client</a>
             <div class="accordion" id="accordionFlushExample">
                 {% for client in clients %}
                 <div class="accordion-item">
