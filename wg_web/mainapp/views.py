@@ -117,7 +117,7 @@ class VPNClientCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['header'] = 'Create VPN Client'
         context['submit_button_text'] = 'Create client'
-        context['cancel_button_url'] = self.success_url
+        context['cancel_button_url'] = f'/vpn_services/{self.kwargs["pk"]}'
         return context
 
     def get_initial(self, *args, **kwargs):
