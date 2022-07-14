@@ -129,6 +129,29 @@ class VPNClientCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return f'/vpn_services/{self.kwargs["pk"]}'
 
 
+class VPNClientUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = '/login/'
+    form_class = VPNClientForm
+    model = VPNClient
+    template_name = 'mainapp/form.html'
+    success_message = 'Client updated successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Update VPN Client'
+        context['submit_button_text'] = 'Update client'
+        context['cancel_button_url'] = f'/vpn_services/{self.kwargs["service_id"]}'
+        return context
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(VPNClientUpdateView, self).get_initial()
+        initial['vpn_service'] = self.kwargs['service_id']
+        return initial
+
+    def get_success_url(self):
+        return f'/vpn_services/{self.kwargs["service_id"]}'
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""
@@ -151,3 +174,15 @@ def delete_vpn_service_view(request, pk: int) -> None:
         except ModelDeleteException:
             messages.error(request, f'VPN Service with id {pk} does not exist!')
         return redirect('mainapp:vpn_services_page')
+
+
+@login_required(login_url='/login/')
+def delete_vpn_service_client(request, service_id, pk: int) -> None:
+    """Delete VPN Client view"""
+    if request.method == 'POST':
+        try:
+            delete_model_object(pk, VPNClient)
+            messages.success(request, 'VPN Client deleted successfully!')
+        except ModelDeleteException:
+            messages.error(request, f'VPN Client with id {pk} does not exist!')
+        return redirect('mainapp:vpn_service_details_page', pk=service_id)
