@@ -152,6 +152,19 @@ class VPNClientUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return f'/vpn_services/{self.kwargs["service_id"]}'
 
 
+# TO DO: change cancel button url in update form when updating from details page
+class VPNClientDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
+    model = VPNClient
+    context_object_name = 'client'
+    template_name = 'mainapp/vpn_client_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['devices'] = VPNDevice.objects.filter(client=self.object)
+        return context
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""
