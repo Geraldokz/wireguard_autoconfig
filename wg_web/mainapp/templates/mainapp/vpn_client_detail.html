@@ -122,7 +122,7 @@
                                 <strong>Persistent keepalive: </strong>{{ device.ka_check }}
                             </div>
                         </div>
-                        <a href="" class="btn btn-outline-primary">Update device</a>
+                        <a href="{% url 'mainapp:update_vpn_device' client.vpn_service.pk client.pk device.pk %}" class="btn btn-outline-primary">Update device</a>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                             data-bs-target="#Modal{{ forloop.counter }}">Delete device</button>
                         <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"

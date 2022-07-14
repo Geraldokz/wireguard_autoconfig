@@ -194,6 +194,29 @@ class VPNDeviceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return f'/vpn_services/{self.kwargs["service_id"]}/clients/{self.kwargs["pk"]}'
 
 
+class VPNDeviceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = '/login/'
+    form_class = VPNDeviceForm
+    model = VPNDevice
+    template_name = 'mainapp/form.html'
+    success_message = 'Device updated successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Update VPN Device'
+        context['submit_button_text'] = 'Update device'
+        context['cancel_button_url'] = f'/vpn_services/{self.kwargs["service_id"]}/clients/{self.kwargs["client_id"]}'
+        return context
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(VPNDeviceUpdateView, self).get_initial()
+        initial['client'] = self.kwargs['client_id']
+        return initial
+
+    def get_success_url(self):
+        return f'/vpn_services/{self.kwargs["service_id"]}/clients/{self.kwargs["client_id"]}'
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""

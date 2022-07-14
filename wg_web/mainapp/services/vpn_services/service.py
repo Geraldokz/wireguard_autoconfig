@@ -26,7 +26,6 @@ def get_all_vpn_service_devices(vpn_service_id: int) -> List[Type[VPNDevice]]:
     vpn_devices = []
     vpn_clients = get_vpn_service_clients(vpn_service_id)
 
-    # TO DO: change for few devices!
     for client in vpn_clients:
         devices = VPNDevice.objects.filter(client=client.pk)
         for device in devices:

@@ -51,6 +51,7 @@ class VPNClient(models.Model):
         return f'{self.client_name}'
 
 
+# TO DO: add extra validation to ip and keys
 class VPNDevice(models.Model):
     """VPN Device model"""
     DEVICE_TYPES = (

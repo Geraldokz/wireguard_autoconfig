@@ -53,7 +53,7 @@ class VPNDeviceForm(forms.ModelForm):
         ]
         widgets = {
             'device_name': forms.TextInput(attrs={'class': 'form-control mb-2'}),
-            'device_type': forms.Select(attrs={'class': 'form-control mb-2'}),
+            'device_type': forms.Select(attrs={'class': 'form-select mb-2'}),
             'private_ip': forms.TextInput(attrs={'class': 'form-control mb-2'}),
             'public_key': forms.TextInput(attrs={'class': 'form-control mb-2'}),
             'private_key': forms.TextInput(attrs={'class': 'form-control mb-2'}),
