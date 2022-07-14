@@ -3,11 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin, messages
 from django.shortcuts import render, redirect
 
-from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, FormView
+from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
 
 from .exceptions import ModelDeleteException
-from .forms import VPNServerForm, VPNServiceForm, VPNClientForm
+from .forms import VPNServerForm, VPNServiceForm, VPNClientForm, VPNDeviceForm
 from .services.models.crud import delete_model_object
+from .services.wg_keys import generate_keys
+from .services.vpn_services.network import generate_vpn_device_ip
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
 
 
@@ -165,6 +167,33 @@ class VPNClientDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class VPNDeviceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url = '/login/'
+    form_class = VPNDeviceForm
+    template_name = 'mainapp/form.html'
+    success_message = 'Device created successfully!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header'] = 'Create VPN Device'
+        context['submit_button_text'] = 'Create device'
+        context['cancel_button_url'] = f'/vpn_services/{self.kwargs["service_id"]}/clients/{self.kwargs["pk"]}'
+        return context
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(VPNDeviceCreateView, self).get_initial()
+        private_key, public_key = generate_keys()
+        ip_address = generate_vpn_device_ip(self.kwargs['service_id'])
+        initial['client'] = self.kwargs['pk']
+        initial['private_key'] = private_key
+        initial['public_key'] = public_key
+        initial['private_ip'] = ip_address
+        return initial
+
+    def get_success_url(self):
+        return f'/vpn_services/{self.kwargs["service_id"]}/clients/{self.kwargs["pk"]}'
+
+
 @login_required(login_url='/login/')
 def delete_vpn_server_view(request, pk: int) -> None:
     """Delete server view"""
@@ -199,3 +228,15 @@ def delete_vpn_service_client(request, service_id, pk: int) -> None:
         except ModelDeleteException:
             messages.error(request, f'VPN Client with id {pk} does not exist!')
         return redirect('mainapp:vpn_service_details_page', pk=service_id)
+
+
+@login_required(login_url='/login/')
+def delete_vpn_device_view(request, service_id: int, client_id: int, pk: int) -> None:
+    """Delete VPN Client view"""
+    if request.method == 'POST':
+        try:
+            delete_model_object(pk, VPNDevice)
+            messages.success(request, 'VPN Device deleted successfully!')
+        except ModelDeleteException:
+            messages.error(request, f'VPN Device with id {pk} does not exist!')
+        return redirect('mainapp:vpn_client_details_page', service_id=service_id, pk=client_id)

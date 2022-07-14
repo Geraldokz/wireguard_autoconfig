@@ -74,7 +74,7 @@
                 </tbody>
             </table>
             <h2 class="mb-3">Device list</h2>
-            <a href="" class="btn btn-outline-success mb-3">Add new device</a>
+            <a href="{% url 'mainapp:create_vpn_device' client.vpn_service.pk client.pk %}" class="btn btn-outline-success mb-3">Add new device</a>
             <div class="accordion" id="accordionFlushExample">
                 {% for device in devices %}
                 <div class="card mb-2">
@@ -89,7 +89,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col">
-                                <strong>Device type: </strong>{{ device.get_device_type_dispay }}
+                                <strong>Device type: </strong>{{ device.get_device_type_display }}
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -136,12 +136,12 @@
                                     </div>
                                     <div class="modal-body">
                                         Are you sure you want to delete
-                                        <span class="text-primary">{{ server.hostname }}</span> deivce?
+                                        <span class="text-primary">{{ device.device_name }}</span> deivce?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
-                                        <form action="" method="post">
+                                        <form action="{% url 'mainapp:delete_vpn_device' client.vpn_service.pk client.pk device.pk %}" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                         </form>

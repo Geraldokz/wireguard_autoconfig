@@ -41,3 +41,24 @@ class VPNClientForm(forms.ModelForm):
             'client_email': forms.TextInput(attrs={'class': 'form-control mb-2'}),
             'vpn_service': forms.Select(attrs={'class': 'form-control mb-3', 'readonly': 'readonly'}),
         }
+
+
+class VPNDeviceForm(forms.ModelForm):
+    """VPN Client creating/updating form"""
+    class Meta:
+        model = VPNDevice
+        fields = [
+            'device_name', 'device_type', 'private_ip', 'public_key',
+            'private_key', 'dns', 'allowed_ips', 'ka_check', 'client'
+        ]
+        widgets = {
+            'device_name': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'device_type': forms.Select(attrs={'class': 'form-control mb-2'}),
+            'private_ip': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'public_key': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'private_key': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'dns': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'allowed_ips': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'ka_check': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'client': forms.Select(attrs={'class': 'form-control mb-3', 'readonly': 'readonly'}),
+        }
