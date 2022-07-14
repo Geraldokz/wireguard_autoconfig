@@ -51,8 +51,6 @@ class VPNClient(models.Model):
         return f'{self.client_name}'
 
 
-# TO DO
-# 1. Replace keys generating logic to save method
 class VPNDevice(models.Model):
     """VPN Device model"""
     DEVICE_TYPES = (
@@ -69,10 +67,6 @@ class VPNDevice(models.Model):
     allowed_ips = models.CharField(max_length=255, verbose_name='Allowed ips', default='0.0.0.0/0')
     ka_check = models.IntegerField(verbose_name='Keepalive check interval', default=20)
     client = models.ForeignKey(VPNClient, on_delete=models.CASCADE, verbose_name='VPN Client')
-
-    def save(self, *args, **kwargs):
-        self.private_key, self.public_key = generate_keys()
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.device_name}'
