@@ -22,7 +22,43 @@
             </div>
             {% endfor %}
             {% endif %}
+            <!-- <a href="" class="btn btn-outline-dark mb-3">Get config</a> -->
+            <a class="btn btn-outline-dark mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                aria-expanded="false" aria-controls="collapseExample">Get config</a>
             <a href="#" class="btn btn-outline-success mb-3">Import service config</a>
+            <a href="#" class="btn btn-outline-primary mb-3">Update service</a>
+            <a href="#" class="btn btn-outline-danger mb-3">Delete service</a>
+            <div class="collapse mb-3" id="collapseExample">
+                <div class="card card-body">
+                    <p class="text-muted">
+                        [Interface]<br>
+
+                        Address = {{ service_addr }}<br>
+
+                        PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING
+                        -o {{ service.server.if_name }} -j MASQUERADE<br>
+
+                        PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING
+                        -o {{ service.server.if_name }} -j MASQUERADE<br>
+
+                        ListenPort = {{ service.vpn_port }}<br>
+
+                        PrivateKey = {{ service.private_key }}
+                    </p>
+                    {% for device in devices %}
+                    <p class="text-muted">
+                        [Peer]<br>
+
+                        #PeerInfo = DeviceName: {{ device.device_name }};
+                        DeviceType: {{ device.get_device_type_display }}; Client: {{ device.client.client_name }}<br>
+
+                        PublicKey = {{ device.public_key }}<br>
+
+                        AllowedIPs = {{ device.private_ip }}/32
+                    </p>
+                    {% endfor %}
+                </div>
+            </div>
             <h2 class="mb-3">Service info</h2>
             <table class="table table-sm table-light table-bordered mb-4">
                 <thead>
@@ -52,7 +88,8 @@
                 </tbody>
             </table>
             <h2 class="mb-3">Clients list</h2>
-            <a href="{% url 'mainapp:create_vpn_client' service.pk %}" class="btn btn-outline-success mb-3">Add new client</a>
+            <a href="{% url 'mainapp:create_vpn_client' service.pk %}" class="btn btn-outline-success mb-3">Add new
+                client</a>
             <div class="accordion" id="accordionFlushExample">
                 {% for client in clients %}
                 <div class="accordion-item">
@@ -81,8 +118,10 @@
                                     <strong>VPN service: </strong>{{ client.vpn_service.service_name }}
                                 </div>
                             </div>
-                            <a href="{% url 'mainapp:vpn_client_details_page' service.pk client.pk %}" class="btn btn-outline-secondary">Details</a>
-                            <a href="{% url 'mainapp:update_vpn_client' service.pk client.pk %}" class="btn btn-outline-primary">Update client</a>
+                            <a href="{% url 'mainapp:vpn_client_details_page' service.pk client.pk %}"
+                                class="btn btn-outline-secondary">Details</a>
+                            <a href="{% url 'mainapp:update_vpn_client' service.pk client.pk %}"
+                                class="btn btn-outline-primary">Update client</a>
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#Modal{{ forloop.counter }}">Delete client</button>
                             <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
@@ -102,7 +141,8 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                            <form action="{% url 'mainapp:delete_vpn_client' service.pk client.pk %}" method="post">
+                                            <form action="{% url 'mainapp:delete_vpn_client' service.pk client.pk %}"
+                                                method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>

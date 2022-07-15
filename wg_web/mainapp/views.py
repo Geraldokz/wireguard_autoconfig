@@ -2,14 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin, messages
 from django.shortcuts import render, redirect
-
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
 
 from .exceptions import ModelDeleteException
 from .forms import VPNServerForm, VPNServiceForm, VPNClientForm, VPNDeviceForm
 from .services.models.crud import delete_model_object
 from .services.wg_keys import generate_keys
-from .services.vpn_services.network import generate_vpn_device_ip
+from .services.vpn_services.service import get_all_vpn_service_devices
+from .services.vpn_services.network import generate_vpn_device_ip, get_service_wg_address
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
 
 
@@ -109,8 +109,12 @@ class VPNServiceDetailView(LoginRequiredMixin, DetailView):
     template_name = 'mainapp/vpn_service_detail.html'
 
     def get_context_data(self, **kwargs):
+        service_address = get_service_wg_address(self.kwargs['pk'])
+        service_devices = get_all_vpn_service_devices(self.kwargs['pk'])
         context = super().get_context_data(**kwargs)
         context['clients'] = VPNClient.objects.filter(vpn_service=self.object)
+        context['service_addr'] = service_address
+        context['devices'] = service_devices
         return context
 
 

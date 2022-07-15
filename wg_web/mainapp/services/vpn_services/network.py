@@ -15,6 +15,13 @@ def generate_vpn_device_ip(service_id: int) -> str:
     return free_ip
 
 
+def get_service_wg_address(service_id: int) -> str:
+    """Get service address in wg config style"""
+    vpn_service = get_vpn_service(service_id)
+    wg_service_address = f'{vpn_service.private_ip}/{vpn_service.vpn_network.split("/")[1]}'
+    return wg_service_address
+
+
 def _get_vpn_busy_ip(vpn_devices: List[Type[VPNDevice]]) -> List[str]:
     """Find service busy ip addresses"""
     busy_ips = [device.private_ip for device in vpn_devices]
