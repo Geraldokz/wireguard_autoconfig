@@ -43,7 +43,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <form action="{% url 'mainapp:delete_vpn_client' client.vpn_service.pk client.pk %}" method="post">
+                            <form action="{% url 'mainapp:delete_vpn_client' client.vpn_service.pk client.pk %}"
+                                method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
@@ -74,7 +75,8 @@
                 </tbody>
             </table>
             <h2 class="mb-3">Device list</h2>
-            <a href="{% url 'mainapp:create_vpn_device' client.vpn_service.pk client.pk %}" class="btn btn-outline-success mb-3">Add new device</a>
+            <a href="{% url 'mainapp:create_vpn_device' client.vpn_service.pk client.pk %}"
+                class="btn btn-outline-success mb-3">Add new device</a>
             <div class="accordion" id="accordionFlushExample">
                 {% for device in devices %}
                 <div class="card mb-2">
@@ -122,9 +124,40 @@
                                 <strong>Persistent keepalive: </strong>{{ device.ka_check }}
                             </div>
                         </div>
-                        <a href="{% url 'mainapp:update_vpn_device' client.vpn_service.pk client.pk device.pk %}" class="btn btn-outline-primary">Update device</a>
+                        <a class="btn btn-outline-dark" data-bs-toggle="collapse"
+                            href="#collapseExample{{ forloop.counter }}" role="button" aria-expanded="false"
+                            aria-controls="collapseExample{{ forloop.counter }}">Show config</a>
+                        <a href="{% url 'mainapp:update_vpn_device' client.vpn_service.pk client.pk device.pk %}"
+                            class="btn btn-outline-primary">Update device</a>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                             data-bs-target="#Modal{{ forloop.counter }}">Delete device</button>
+                        <div class="mt-3 collapse" id="collapseExample{{ forloop.counter }}">
+                            <div class="card bg-light card-body">
+                                <p class="text-muted">
+                                    [Interface]<br>
+                                    PrivateKey = {{ device.private_key }}<br>
+                                    Address = {{ device.private_ip }}/32<br>
+                                    DNS = {{ device.dns }}
+                                </p>
+                                <p class="text-muted">
+                                    [Peer]<br>
+                                    PublicKey = {{ device.client.vpn_service.public_key }}<br>
+                                    Endpoint = {{ device.client.vpn_service.server.public_ip }}:{{ device.client.vpn_service.vpn_port }}<br>
+                                    AllowedIPs = {{ device.allowed_ips }}<br>
+                                    PersistentKeepalive = {{ device.ka_check }}
+                                </p>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-outline-secondary conf-copy">Copy</button>
+                                    <a href="" class="btn btn-outline-secondary conf-download">Download config</a>
+                                    <button type="" class="btn btn-outline-secondary conf-qr">Generate QR-code</button>
+                                </div>
+                                <div class="qr-code-block d-none mt-3">
+                                    <a href="">
+                                        <canvas id="qr"></canvas>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal fade" id="Modal{{ forloop.counter }}" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -141,7 +174,9 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
-                                        <form action="{% url 'mainapp:delete_vpn_device' client.vpn_service.pk client.pk device.pk %}" method="post">
+                                        <form
+                                            action="{% url 'mainapp:delete_vpn_device' client.vpn_service.pk client.pk device.pk %}"
+                                            method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                         </form>
@@ -156,4 +191,6 @@
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="{% static 'mainapp/js/wg_config_script.js' %}"></script>
 {% endblock %}

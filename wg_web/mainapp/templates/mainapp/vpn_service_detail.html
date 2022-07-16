@@ -22,9 +22,8 @@
             </div>
             {% endfor %}
             {% endif %}
-            <!-- <a href="" class="btn btn-outline-dark mb-3">Get config</a> -->
             <a class="btn btn-outline-dark mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button"
-                aria-expanded="false" aria-controls="collapseExample">Get config</a>
+                aria-expanded="false" aria-controls="collapseExample">Show config</a>
             <a href="#" class="btn btn-outline-success mb-3">Import service config</a>
             <a href="#" class="btn btn-outline-primary mb-3">Update service</a>
             <a href="#" class="btn btn-outline-danger mb-3">Delete service</a>
@@ -35,11 +34,9 @@
 
                         Address = {{ service_addr }}<br>
 
-                        PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING
-                        -o {{ service.server.if_name }} -j MASQUERADE<br>
+                        PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ service.server.if_name }} -j MASQUERADE<br>
 
-                        PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING
-                        -o {{ service.server.if_name }} -j MASQUERADE<br>
+                        PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ service.server.if_name }} -j MASQUERADE<br>
 
                         ListenPort = {{ service.vpn_port }}<br>
 
@@ -49,14 +46,17 @@
                     <p class="text-muted">
                         [Peer]<br>
 
-                        #PeerInfo = DeviceName: {{ device.device_name }};
-                        DeviceType: {{ device.get_device_type_display }}; Client: {{ device.client.client_name }}<br>
+                        #PeerInfo = DeviceName: {{ device.device_name }}; DeviceType: {{ device.get_device_type_display }}; Client: {{ device.client.client_name }}<br>
 
                         PublicKey = {{ device.public_key }}<br>
 
                         AllowedIPs = {{ device.private_ip }}/32
                     </p>
                     {% endfor %}
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-outline-secondary conf-copy">Copy</button>
+                        <a href="" class="btn btn-outline-secondary conf-download">Download config</a>
+                    </div>
                 </div>
             </div>
             <h2 class="mb-3">Service info</h2>
@@ -158,4 +158,6 @@
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="{% static 'mainapp/js/wg_config_script.js' %}"></script>
 {% endblock %}
