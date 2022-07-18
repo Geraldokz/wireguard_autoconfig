@@ -10,8 +10,9 @@ from mainapp.services.vpn_services.validators import validate_network
 
 class VPNServer(models.Model):
     """VPN Server model"""
-    hostname = models.CharField(max_length=255, verbose_name='Hostname')
-    public_ip = models.CharField(max_length=15, verbose_name='Server IP', validators=[validate_ipv4_address])
+    hostname = models.CharField(max_length=255, verbose_name='Hostname', unique=True)
+    public_ip = models.CharField(max_length=15, verbose_name='Server IP', validators=[validate_ipv4_address],
+                                 unique=True)
     if_name = models.CharField(max_length=50, verbose_name='Eth interface name')
 
     def __str__(self):
@@ -21,7 +22,7 @@ class VPNServer(models.Model):
 # TO DO: add keys validation
 class VPNService(models.Model):
     """VPN Service model"""
-    service_name = models.CharField(max_length=255, verbose_name='VPN Service name')
+    service_name = models.CharField(max_length=255, verbose_name='VPN Service name', unique=True)
     vpn_network = models.CharField(max_length=18, verbose_name='VPN Service network', validators=[validate_network])
     vpn_port = models.IntegerField(verbose_name='VPN port')
     private_ip = models.CharField(max_length=15, verbose_name='VPN Service ip', validators=[validate_ipv4_address])
