@@ -25,8 +25,34 @@
             <a class="btn btn-outline-dark mb-3" data-bs-toggle="collapse" href="#collapseExample" role="button"
                 aria-expanded="false" aria-controls="collapseExample">Show config</a>
             <a href="#" class="btn btn-outline-success mb-3">Import service config</a>
-            <a href="#" class="btn btn-outline-primary mb-3">Update service</a>
-            <a href="#" class="btn btn-outline-danger mb-3">Delete service</a>
+            <a href="{% url 'mainapp:update_vpn_service' service.pk %}" class="btn btn-outline-primary mb-3">Update
+                service</a>
+            <button type="button" class="btn btn-outline-danger mb-3" data-bs-toggle="modal"
+                data-bs-target="#ModalDelete">Delete service</button>
+            <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete
+                            <span class="text-primary">{{ service.service_name }}</span> VPN service?
+                            All VPN
+                            clients and devices on this service <strong>will be removed!</strong>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form action="{% url 'mainapp:delete_vpn_service' service.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="collapse mb-3" id="collapseExample">
                 <div class="card card-body">
                     <p class="text-muted">
@@ -89,8 +115,9 @@
             </table>
             <h2 class="mb-3">Clients list</h2>
             <a href="{% url 'mainapp:create_vpn_client' service.pk %}" class="btn btn-outline-success mb-3">Add new
-                client</a>
-            <div class="accordion" id="accordionFlushExample">
+                client
+            </a>
+            <div class="accordion mb-3" id="accordionFlushExample">
                 {% for client in clients %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
@@ -147,6 +174,128 @@
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <h2 class="mb-3">Device list</h2>
+            <div class="accordion" id="accordionFlushExample">
+                {% for device in devices %}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        {{ device.device_name }}
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Device name: </strong>{{ device.device_name }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Device type: </strong>{{ device.get_device_type_display }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Client: </strong><a
+                                    href="{% url 'mainapp:vpn_client_details_page' service.pk device.client.pk %}"
+                                    class="link-primary">
+                                    {{ device.client.client_name }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>IP: </strong>{{ device.private_ip }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Publick key: </strong>{{ device.public_key }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Private key: </strong>{{ device.private_key }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>DNS IP: </strong>{{ device.dns }}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <strong>Allowed ips: </strong>{{ device.allowed_ips }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <strong>Persistent keepalive: </strong>{{ device.ka_check }}
+                            </div>
+                        </div>
+                        <a class="btn btn-outline-dark" data-bs-toggle="collapse"
+                            href="#collapseExample{{ forloop.counter }}" role="button" aria-expanded="false"
+                            aria-controls="collapseExample{{ forloop.counter }}">Show config</a>
+                        <a href="{% url 'mainapp:update_vpn_device' service.pk device.client.pk device.pk %}"
+                            class="btn btn-outline-primary">Update device</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#ModalDevice{{ forloop.counter }}">Delete device</button>
+                        <div class="mt-3 collapse" id="collapseExample{{ forloop.counter }}">
+                            <div class="card bg-light card-body">
+                                <p class="text-muted">
+                                    [Interface]<br>
+                                    PrivateKey = {{ device.private_key }}<br>
+                                    Address = {{ device.private_ip }}/32<br>
+                                    DNS = {{ device.dns }}
+                                </p>
+                                <p class="text-muted">
+                                    [Peer]<br>
+                                    PublicKey = {{ device.client.vpn_service.public_key }}<br>
+                                    Endpoint = {{ device.client.vpn_service.server.public_ip }}:{{
+                                    device.client.vpn_service.vpn_port }}<br>
+                                    AllowedIPs = {{ device.allowed_ips }}<br>
+                                    PersistentKeepalive = {{ device.ka_check }}
+                                </p>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-outline-secondary conf-copy">Copy</button>
+                                    <a href="" class="btn btn-outline-secondary conf-download">Download config</a>
+                                    <button type="" class="btn btn-outline-secondary conf-qr">Generate QR-code</button>
+                                </div>
+                                <div class="qr-code-block d-none mt-3">
+                                    <a href="">
+                                        <canvas id="qr"></canvas>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="ModalDevice{{ forloop.counter }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete
+                                        <span class="text-primary">{{ device.device_name }}</span> deivce?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <form
+                                            action="{% url 'mainapp:delete_vpn_device' service.pk device.client.pk device.pk %}"
+                                            method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
