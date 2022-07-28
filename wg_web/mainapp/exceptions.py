@@ -8,3 +8,7 @@ class NetworkGeneratingException(Exception):
 
 class VPNServiceException(Exception):
     pass
+
+
+class VPNServerImportError(Exception):
+    pass

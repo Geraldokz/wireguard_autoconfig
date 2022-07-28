@@ -257,8 +257,7 @@
                                 <p class="text-muted">
                                     [Peer]<br>
                                     PublicKey = {{ device.client.vpn_service.public_key }}<br>
-                                    Endpoint = {{ device.client.vpn_service.server.public_ip }}:{{
-                                    device.client.vpn_service.vpn_port }}<br>
+                                    Endpoint = {{ device.client.vpn_service.server.public_ip }}:{{ device.client.vpn_service.vpn_port }}<br>
                                     AllowedIPs = {{ device.allowed_ips }}<br>
                                     PersistentKeepalive = {{ device.ka_check }}
                                 </p>

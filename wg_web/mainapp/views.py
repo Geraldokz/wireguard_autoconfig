@@ -4,8 +4,9 @@ from django.contrib.messages.views import SuccessMessageMixin, messages
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
 
-from .exceptions import ModelDeleteException
+from .exceptions import ModelDeleteException, VPNServerImportError
 from .forms import VPNServerForm, VPNServiceForm, VPNClientForm, VPNDeviceForm
+from .services.servers.importation import import_vpn_server
 from .services.models.crud import delete_model_object
 from .services.wg_keys import generate_keys
 from .services.vpn_services.service import get_all_vpn_service_devices
@@ -272,3 +273,18 @@ def delete_vpn_device_view(request, service_id: int, client_id: int, pk: int) ->
         except ModelDeleteException:
             messages.error(request, f'VPN Device with id {pk} does not exist!')
         return redirect('mainapp:vpn_client_details_page', service_id=service_id, pk=client_id)
+
+
+@login_required(login_url='/login/')
+def import_servers_conf(request) -> None:
+    """Import VPN Servers"""
+    print(request)
+    if request.method == 'POST':
+        server_conf = request.FILES['configFile'].read()
+
+        try:
+            import_vpn_server(server_conf)
+            messages.success(request, 'VPN Server imported successfully!')
+        except VPNServerImportError as err:
+            messages.error(request, err)
+        return redirect('mainapp:vpn_servers_page')
