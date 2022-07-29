@@ -4,11 +4,12 @@ from django.contrib.messages.views import SuccessMessageMixin, messages
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
 
-from .exceptions import ModelDeleteException, VPNServerImportError
+from .exceptions import ModelDeleteException, VPNServerImportError, VPNServiceImportError
 from .forms import VPNServerForm, VPNServiceForm, VPNClientForm, VPNDeviceForm
 from .services.servers.importation import import_vpn_server
 from .services.models.crud import delete_model_object
 from .services.wg_keys import generate_keys
+from .services.vpn_services.importation import import_vpn_service
 from .services.vpn_services.service import get_all_vpn_service_devices
 from .services.vpn_services.network import generate_vpn_device_ip, get_service_wg_address
 from .models import VPNServer, VPNService, VPNClient, VPNDevice
@@ -278,7 +279,6 @@ def delete_vpn_device_view(request, service_id: int, client_id: int, pk: int) ->
 @login_required(login_url='/login/')
 def import_servers_conf(request) -> None:
     """Import VPN Servers"""
-    print(request)
     if request.method == 'POST':
         server_conf = request.FILES['configFile'].read()
 
@@ -288,3 +288,16 @@ def import_servers_conf(request) -> None:
         except VPNServerImportError as err:
             messages.error(request, err)
         return redirect('mainapp:vpn_servers_page')
+
+
+@login_required(login_url='/login/')
+def import_service_conf(request) -> None:
+    if request.method == 'POST':
+        service_conf = request.FILES['configFile'].read()
+
+        try:
+            import_vpn_service(service_conf)
+            messages.success(request, 'VPN Service imported successfully!')
+        except VPNServiceImportError as err:
+            messages.error(request, err)
+        return redirect('mainapp:vpn_services_page')

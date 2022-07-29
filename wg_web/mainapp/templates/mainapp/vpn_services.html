@@ -22,6 +22,32 @@
             {% endfor %}
             {% endif %}
             <a href="{% url 'mainapp:create_vpn_service' %}" class="btn btn-outline-success mb-3">Add new service</a>
+            <button type="button" class="btn btn-outline-secondary mb-3" data-bs-toggle="modal"
+                data-bs-target="#ModalImportConf">Import service</button>
+            <div class="modal fade" id="ModalImportConf" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Import Service config</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Upload .json config file</p>
+                            <form action="{% url 'mainapp:import_vpn_service' %}" method="post"
+                                enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" name="configFile" id="configFile"
+                                        aria-describedby="inputGroupFileAddon04" aria-label="Upload" required="True">
+                                </div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Import</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="accordion" id="accordionFlushExample">
                 {% for service in services %}
                 <div class="accordion-item">

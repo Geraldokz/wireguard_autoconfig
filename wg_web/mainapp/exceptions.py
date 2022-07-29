@@ -12,3 +12,7 @@ class VPNServiceException(Exception):
 
 class VPNServerImportError(Exception):
     pass
+
+
+class VPNServiceImportError(Exception):
+    pass

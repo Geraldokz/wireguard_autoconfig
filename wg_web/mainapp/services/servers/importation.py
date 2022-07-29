@@ -1,5 +1,5 @@
-from typing import NamedTuple
 import json
+from typing import NamedTuple
 
 from django.core.exceptions import ValidationError
 
